@@ -109,8 +109,16 @@ def solve_polynomial(equation, degree):
 	terms = extract_terms(equation.split('=')[0])
 
 	if degree == 0:
-		coeffs = sum(terms.values())
-		if coeffs == 0:
+		result = sum(terms.values())
+		if result == 0:
 			print('Any real number is a solution.')
 		else:
 			print('There is no solution.')
+	elif degree == 1:
+		result = 0
+		for exp in terms:
+			if exp == 0:
+				result -= terms[exp]
+			else:
+				result *= 1/terms[exp]
+		print(f'The solution is:\n{result}')
