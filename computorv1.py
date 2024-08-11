@@ -22,7 +22,6 @@ def polynomial_degree(equation):
 		while end < len(equation) and equation[end].isdigit():
 			end += 1
 
-
 		exponent = int(equation[start:end])
 		if exponent > max_degree:
 			max_degree = exponent
@@ -105,3 +104,13 @@ def reduced_form(equation):
 
 	reduced_result = ' '.join(reduced)
 	return f"{reduced_result} = 0"
+
+def solve_polynomial(equation, degree):
+	terms = extract_terms(equation.split('=')[0])
+
+	if degree == 0:
+		coeffs = sum(terms.values())
+		if coeffs == 0:
+			print('Any real number is a solution.')
+		else:
+			print('There is no solution.')
