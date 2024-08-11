@@ -93,7 +93,7 @@ def reduced_form(equation):
 			left_terms[exp] = -right_terms[exp]
 
 	reduced = []
-	for exp in sorted(left_terms, reverse=False):
+	for exp in sorted(left_terms, reverse=True):
 		coef = left_terms[exp]
 		term = f"{int(absolute(coef))} * X^{exp}" if coef.is_integer() else f"{absolute(coef)} * X^{exp}"
 		if coef < 0:
@@ -122,3 +122,11 @@ def solve_polynomial(equation, degree):
 			else:
 				result *= 1/terms[exp]
 		print(f'The solution is:\n{result}')
+	elif degree == 2:
+		delta = (terms[1] * terms[1]) - (4 * terms[2] * terms[0])
+		print(delta)
+		if delta < 0:
+			print('Discriminant is strictly negative, there is no solution:\nnull set.')
+		if delta == 0:
+			result = -terms[1] / (2 * terms[2])
+			print(f'Discriminant is zero, there is exactly one real solution:\n{result}')
