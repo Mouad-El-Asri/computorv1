@@ -127,21 +127,31 @@ def solve_polynomial(equation, degree):
 		else:
 			print('There is no solution.')
 	elif degree == 1:
-		result = 0
+		const_term = 0
+		coef = 0
 		for exp in terms:
 			if exp == 0:
-				result -= terms[exp]
+				const_term += terms[exp]
 			else:
-				result *= 1/terms[exp]
-		print(f'The solution is:\n{result}')
+				coef = terms[exp]
+			
+		if coef == 0:
+			if const_term == 0:
+				print('Any real number is a solution.')
+			else:
+				print('There is no solution.')
+		else:
+			result = -const_term / coef
+			print(f'The solution is:\n{result}')
 	elif degree == 2:
 		delta = (terms[1] ** 2) - (4 * terms[2] * terms[0])
-		print(delta)
 		if delta < 0:
-			print('Discriminant is strictly negative, there is no solution:\nnull set.')
-		if delta == 0:
+			print('Discriminant is strictly negative, there is two complex solutions:')
+			print(f'α + β * i = (-2b + i√|Δ|) / 2a = ({-terms[1]} + i√|{delta}|) / 2 * {terms[2]}')
+			print(f'α - β * i = (-2b - i√|Δ|) / 2a = ({-terms[1]} - i√|{delta}|) / 2 * {terms[2]}')
+		elif delta == 0:
 			result = -terms[1] / (2 * terms[2])
-			print(f'Discriminant is zero, there is exactly one real solution:\n{result}')
+			print(f'Discriminant is equal to zero, there is exactly one real solution:\n{result}')
 		else:
 			result_1 = (-terms[1] - square_root(delta)) / (2 * terms[2])
 			result_2 = (-terms[1] + square_root(delta)) / (2 * terms[2])
