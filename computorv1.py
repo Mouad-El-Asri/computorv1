@@ -38,7 +38,7 @@ def extract_terms(expression):
 			expression (str): Polynomial expression with terms.
 		
 		Returns:
-        	dict: Dictionary where keys are exponents and values are aggregated coefficients.
+			dict: Dictionary where keys are exponents and values are aggregated coefficients.
 	"""
 	expression = expression.replace(' ', '')
 	terms = {}
@@ -76,7 +76,7 @@ def reduced_form(equation):
 			equation (str): Polynomial equation
 
 		Returns:
-        	str: The reduced polynomial equation with terms combined.
+			str: The reduced polynomial equation with terms combined.
 	"""
 
 	left_side, right_side = equation.split('=')[:2]
@@ -105,6 +105,18 @@ def reduced_form(equation):
 	reduced_result = ' '.join(reduced)
 	return f"{reduced_result} = 0"
 
+def square_root(num):
+	"""
+		Returns the square root of a given number.
+
+		Args:
+			num (float): The number to find the square root of.
+
+		Returns:
+			num (float): The square root of num.
+	"""
+	return num ** 0.5
+
 def solve_polynomial(equation, degree):
 	terms = extract_terms(equation.split('=')[0])
 
@@ -123,10 +135,14 @@ def solve_polynomial(equation, degree):
 				result *= 1/terms[exp]
 		print(f'The solution is:\n{result}')
 	elif degree == 2:
-		delta = (terms[1] * terms[1]) - (4 * terms[2] * terms[0])
+		delta = (terms[1] ** 2) - (4 * terms[2] * terms[0])
 		print(delta)
 		if delta < 0:
 			print('Discriminant is strictly negative, there is no solution:\nnull set.')
 		if delta == 0:
 			result = -terms[1] / (2 * terms[2])
 			print(f'Discriminant is zero, there is exactly one real solution:\n{result}')
+		else:
+			result_1 = (-terms[1] - square_root(delta)) / (2 * terms[2])
+			result_2 = (-terms[1] + square_root(delta)) / (2 * terms[2])
+			print(f'Discriminant is strictly positive, the two solutions are:\n{round(result_1, 6)}\n{round(result_2, 6)}')
