@@ -16,25 +16,26 @@ def extract_terms(expression):
 	terms = {}
 
 	for term in expression.replace('-', '+-').split('+'):
-		if 'X' in term:
-			if '*' not in term:
-				term = '1*' + term
-			if '^' not in term:
-				term += '^1'
-		elif is_integer(term) or is_float(term):
-			term += '*X^0'
-		else:
-			sys.exit("Error: enter a valid Polynomial equation!")
+		if term:
+			if 'X' in term:
+				if '*' not in term:
+					term = '1*' + term
+				if '^' not in term:
+					term += '^1'
+			elif is_integer(term) or is_float(term):
+				term += '*X^0'
+			else:
+				sys.exit("Error: enter a valid Polynomial equation!")
 
-		coef, exp = term.split('*X^')
-		coef = float(coef)
-		exp = int(exp)
+			coef, exp = term.split('*X^')
+			coef = float(coef)
+			exp = int(exp)
 
-		if exp in terms:
-			terms[exp] += coef
-		else:
-			if coef != 0:
-				terms[exp] = coef
+			if exp in terms:
+				terms[exp] += coef
+			else:
+				if coef != 0:
+					terms[exp] = coef
 	return terms
 
 def reduced_form(equation):
@@ -64,14 +65,15 @@ def reduced_form(equation):
 	reduced = []
 	for exp in sorted(left_terms, reverse=True):
 		coef = left_terms[exp]
-		coef = int(absolute(coef)) if coef.is_integer() else absolute(coef)
+		coef_str = int(absolute(coef)) if coef.is_integer() else absolute(coef)
+
 		if coef not in {1, -1}:
 			if exp not in {1, 0}:
-				term = f"{coef} * X^{exp}"
+				term = f"{coef_str} * X^{exp}"
 			elif exp == 0:
-				term = f"{coef}"
+				term = f"{coef_str}"
 			else:
-				term = f"{coef} * X"
+				term = f"{coef_str} * X"
 		elif coef in {1, -1}:
 			if exp not in {1, 0}:
 				term = f"X^{exp}"
