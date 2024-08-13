@@ -54,3 +54,20 @@ def square_root(num):
 			num (float): The square root of num.
 	"""
 	return num ** 0.5
+
+def max_key(keys):
+	"""
+		Returns the max integer key
+
+		Args:
+			keys (int): a set of dictionary keys
+
+		Returns:
+			max_key (int): The max key
+	"""
+	max_key = 0
+	for key in keys:
+		if key > max_key:
+			max_key = key
+
+	return max_key

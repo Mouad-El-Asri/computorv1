@@ -2,6 +2,22 @@ import re
 import sys
 from utils import *
 
+def is_valid_expression(expression):
+	"""
+		Parse the polynomial expression
+
+		Args:
+			expression (str): Polynomial expression
+
+		Returns:
+			bool: if the Polynomial expression is valid returns True, else returns False
+	"""
+	if not expression.strip():
+		return False
+	elif '=' not in expression:
+		return False
+	return True
+
 def extract_terms(expression):
 	"""
 		Parses a polynomial expression and returns a dictionary of terms.
@@ -92,9 +108,15 @@ def reduced_form(equation):
 	return f"{reduced_result} = 0"
 
 def solve_polynomial(equation):
+	"""
+		Solve a polynomial equation od degree 2 or below
+
+		Args:
+			equation (str): the polynomial equation to solve
+	"""
 	terms = extract_terms(equation.split('=')[0])
 
-	polynomial_degree = max(terms.keys())
+	polynomial_degree = max_key(terms.keys()) if terms.keys() else 0
 	print(f'Polynomial degree: {polynomial_degree}')
 	
 	if polynomial_degree > 2:
