@@ -4,7 +4,7 @@ from utils import *
 
 def is_valid_expression(expression):
 	"""
-		Parse the polynomial expression
+		Parse and validate the polynomial expression using regex
 
 		Args:
 			expression (str): Polynomial expression
@@ -12,11 +12,10 @@ def is_valid_expression(expression):
 		Returns:
 			bool: if the Polynomial expression is valid returns True, else returns False
 	"""
+	input_pattern = r'^[a-zA-Z0-9.^*=+\- ]+$'
 	if not expression.strip():
 		return False
-	elif '=' not in expression:
-		return False
-	return True
+	return bool(re.fullmatch(input_pattern, expression))
 
 def extract_terms(expression):
 	"""
