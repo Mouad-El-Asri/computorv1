@@ -2,7 +2,7 @@ import re
 import sys
 from utils import *
 
-def is_valid_expression(expression):
+def is_valid_expression(expression: str) -> bool:
 	"""
 		Parse and validate the polynomial expression using regex
 
@@ -12,12 +12,12 @@ def is_valid_expression(expression):
 		Returns:
 			bool: if the Polynomial expression is valid returns True, else returns False
 	"""
-	input_pattern = r'^[a-zA-Z0-9.^*=+\- ]+$'
-	if not expression.strip():
+	input_pattern: str = r'^[a-zA-Z0-9.^*=+\- ]+$'
+	if not expression.strip() or '=' not in expression:
 		return False
 	return bool(re.fullmatch(input_pattern, expression))
 
-def extract_terms(expression):
+def extract_terms(expression: str) -> dict[int, float]:
 	"""
 		Parses a polynomial expression and returns a dictionary of terms.
 
@@ -28,7 +28,7 @@ def extract_terms(expression):
 			dict: Dictionary where keys are exponents and values are aggregated coefficients.
 	"""
 	expression = expression.replace(' ', '')
-	terms = {}
+	terms: dict[int, float] = {}
 
 	for term in expression.replace('-', '+-').split('+'):
 		if term:
@@ -42,18 +42,19 @@ def extract_terms(expression):
 			else:
 				sys.exit("Error: enter a valid Polynomial equation!")
 
-			coef, exp = term.split('*X^')
-			coef = float(coef)
-			exp = int(exp)
+			coef_str: str
+			exp_str: str
+			coef_str, exp_str = term.split('*X^')
+			coef: float = float(coef_str)
+			exp: int = int(exp_str)
 
 			if exp in terms:
 				terms[exp] += coef
-			else:
-				if coef != 0:
-					terms[exp] = coef
+			elif coef != 0:
+				terms[exp] = coef
 	return terms
 
-def reduced_form(equation):
+def reduced_form(equation: str) -> str:
 	"""
 		Reduces a polynomial equation to its reduced form.
 
@@ -63,13 +64,15 @@ def reduced_form(equation):
 		Returns:
 			str: The reduced polynomial equation with terms combined.
 	"""
+	left_side: str
+	right_side: str
 
 	left_side, right_side = equation.split('=')[:2]
 	left_side = left_side.strip()
 	right_side = right_side.strip()
 
-	left_terms = extract_terms(left_side)
-	right_terms = extract_terms(right_side)
+	left_terms: dict[int, float] = extract_terms(left_side)
+	right_terms: dict[int, float] = extract_terms(right_side)
 
 	for exp in right_terms:
 		if exp in left_terms:
@@ -77,11 +80,11 @@ def reduced_form(equation):
 		else:
 			left_terms[exp] = -right_terms[exp]
 
-	reduced = []
+	reduced: list[str] = []
 	for exp in sorted(left_terms, reverse=True):
-		coef = left_terms[exp]
-		coef_str = int(absolute(coef)) if coef.is_integer() else absolute(coef)
-
+		coef: float = left_terms[exp]
+		coef_str: int | float = int(absolute(coef)) if coef.is_integer() else absolute(coef)
+		term: str
 		if coef not in {1, -1}:
 			if exp not in {1, 0}:
 				term = f"{coef_str} * X^{exp}"
@@ -106,30 +109,30 @@ def reduced_form(equation):
 	reduced_result = ' '.join(reduced)
 	return f"{reduced_result} = 0"
 
-def solve_polynomial(equation):
+def solve_polynomial(equation: str):
 	"""
 		Solve a polynomial equation od degree 2 or below
 
 		Args:
 			equation (str): the polynomial equation to solve
 	"""
-	terms = extract_terms(equation.split('=')[0])
+	terms: dict[int, float] = extract_terms(equation.split('=')[0])
 
-	polynomial_degree = max_key(terms.keys()) if terms.keys() else 0
+	polynomial_degree: int = max_key(terms.keys()) if terms.keys() else 0
 	print(f'Polynomial degree: {polynomial_degree}')
 	
 	if polynomial_degree > 2:
 		sys.exit('The polynomial degree is strictly greater than 2, I can\'t solve.')
 
 	if polynomial_degree == 0:
-		result = sum(terms.values())
+		result: int | float = sum(terms.values())
 		if result == 0:
 			print('Any real number is a solution.')
 		else:
 			print('There is no solution.')
 	elif polynomial_degree == 1:
-		const_term = 0
-		coef = 0
+		const_term: float = 0
+		coef: float = 0
 		for exp in terms:
 			if exp == 0:
 				const_term += terms[exp]
@@ -145,7 +148,7 @@ def solve_polynomial(equation):
 			result = -const_term / coef
 			print(f'The solution is:\n{result}')
 	elif polynomial_degree == 2:
-		delta = (terms[1] ** 2) - (4 * terms[2] * (terms[0] if 0 in terms else 0))
+		delta: int | float = (terms[1] ** 2) - (4 * terms[2] * (terms[0] if 0 in terms else 0))
 		if delta < 0:
 			print('Discriminant is strictly negative, there is two complex solutions:')
 			print(f'α + β * i = (-2b + i√|Δ|) / 2a = ({-terms[1]} + i√|{delta}|) / 2 * {terms[2]}')
