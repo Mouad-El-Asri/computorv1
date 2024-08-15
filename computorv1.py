@@ -148,7 +148,11 @@ def solve_polynomial(equation: str):
 			result = -const_term / coef
 			print(f'The solution is:\n{result}')
 	elif polynomial_degree == 2:
-		delta: int | float = (terms[1] ** 2) - (4 * terms[2] * (terms[0] if 0 in terms else 0))
+		if 1 not in terms:
+			terms[1] = 0
+		elif 0 not in terms:
+			terms[0] = 0
+		delta: int | float = (terms[1] ** 2) - (4 * terms[2] * terms[0])
 		if delta < 0:
 			print('Discriminant is strictly negative, there is two complex solutions:')
 			print(f'α + β * i = (-2b + i√|Δ|) / 2a = ({-terms[1]} + i√|{delta}|) / 2 * {terms[2]}')
