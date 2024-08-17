@@ -2,6 +2,8 @@ import re
 import sys
 from utils import *
 
+terms: dict[int, float]
+
 def is_valid_expression(expression: str) -> bool:
 	"""
 		Parse and validate the polynomial expression using regex
@@ -12,9 +14,10 @@ def is_valid_expression(expression: str) -> bool:
 		Returns:
 			bool: if the Polynomial expression is valid returns True, else returns False
 	"""
-	input_pattern: str = r'^[a-zA-Z0-9.^*=+\- ]+$'
-	if not expression.strip() or '=' not in expression:
+	if not expression.strip() or '=' not in expression \
+		or expression.find('^-') != -1:
 		return False
+	input_pattern: str = r'^[0-9X\.\^\*\=\+\- ]+$'
 	return bool(re.fullmatch(input_pattern, expression))
 
 def extract_terms(expression: str) -> dict[int, float]:
@@ -34,7 +37,7 @@ def extract_terms(expression: str) -> dict[int, float]:
 		if term:
 			if 'X' in term:
 				if '*' not in term:
-					term = '1*' + term
+					term = '-1*' + term.replace('-', '') if term[0] == '-' else '1*' + term
 				if '^' not in term:
 					term += '^1'
 			elif is_integer(term) or is_float(term):
@@ -107,6 +110,8 @@ def reduced_form(equation: str) -> str:
 		reduced.append(term)
 
 	reduced_result = ' '.join(reduced)
+	global terms
+	terms = dict(left_terms)
 	return f"{reduced_result} = 0"
 
 def solve_polynomial(equation: str):
@@ -116,8 +121,6 @@ def solve_polynomial(equation: str):
 		Args:
 			equation (str): the polynomial equation to solve
 	"""
-	terms: dict[int, float] = extract_terms(equation.split('=')[0])
-
 	polynomial_degree: int = max_key(terms.keys()) if terms.keys() else 0
 	print(f'Polynomial degree: {polynomial_degree}')
 	
@@ -125,20 +128,15 @@ def solve_polynomial(equation: str):
 		sys.exit('The polynomial degree is strictly greater than 2, I can\'t solve.')
 
 	if polynomial_degree == 0:
-		result: int | float = sum(terms.values())
+		result: int | float = terms.get(0, 0)
 		if result == 0:
 			print('Any real number is a solution.')
 		else:
 			print('There is no solution.')
 	elif polynomial_degree == 1:
-		const_term: float = 0
-		coef: float = 0
-		for exp in terms:
-			if exp == 0:
-				const_term += terms[exp]
-			else:
-				coef = terms[exp]
-			
+		const_term: float = terms.get(0, 0)
+		coef: float = terms.get(1, 0)
+
 		if coef == 0:
 			if const_term == 0:
 				print('Any real number is a solution.')
@@ -146,6 +144,7 @@ def solve_polynomial(equation: str):
 				print('There is no solution.')
 		else:
 			result = -const_term / coef
+			result = int(result) if result.is_integer() else result
 			print(f'The solution is:\n{result}')
 	elif polynomial_degree == 2:
 		if 1 not in terms:
@@ -155,12 +154,15 @@ def solve_polynomial(equation: str):
 		delta: int | float = (terms[1] ** 2) - (4 * terms[2] * terms[0])
 		if delta < 0:
 			print('Discriminant is strictly negative, there is two complex solutions:')
-			print(f'α + β * i = (-2b + i√|Δ|) / 2a = ({-terms[1]} + i√|{delta}|) / 2 * {terms[2]}')
-			print(f'α - β * i = (-2b - i√|Δ|) / 2a = ({-terms[1]} - i√|{delta}|) / 2 * {terms[2]}')
+			print(f'α + β * i = (-2b + i√|Δ|) / 2a = ({-terms[1]} + i√|{delta}|) / {2 * terms[2]}')
+			print(f'α - β * i = (-2b - i√|Δ|) / 2a = ({-terms[1]} - i√|{delta}|) / {2 * terms[2]}')
 		elif delta == 0:
 			result = -terms[1] / (2 * terms[2])
+			result = int(result) if result.is_integer() else result
 			print(f'Discriminant is equal to zero, there is exactly one real solution:\n{result}')
 		else:
 			result_1 = (-terms[1] - square_root(delta)) / (2 * terms[2])
+			result_1 = int(result_1) if result_1.is_integer() else result_1
 			result_2 = (-terms[1] + square_root(delta)) / (2 * terms[2])
+			result_2 = int(result_2) if result_2.is_integer() else result_2
 			print(f'Discriminant is strictly positive, the two solutions are:\n{round(result_1, 6)}\n{round(result_2, 6)}')
