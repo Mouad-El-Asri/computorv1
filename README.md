@@ -33,12 +33,12 @@ ComputorV1 is a Python program to parse, reduce, and solve polynomial equations 
   	```
 
 3. The program will:
-  - Check if the input is valid
-  - Convert the equation to its reduced form
-  - Show the polynomial degree
-  - Calculate and display the solution(s) if the degree is 0, 1, or 2
-  - If the degree is greater than 2, print a message that it cannot solve the equation
-  - If something is wrong, the program will handle the error and print an error message.
+   - Check if the input is valid
+   - Convert the equation to its reduced form
+   - Show the polynomial degree
+   - Calculate and display the solution(s) if the degree is 0, 1, or 2
+   - If the degree is greater than 2, print a message that it cannot solve the equation
+   - If something is wrong, the program will handle the error and print an error message.
 
 ## 🧮 Example
 
@@ -71,12 +71,12 @@ The polynomial degree is strictly greater than 2, I can't solve.
 
 ```
 computorv1/
-├── run.py                  # Main entry point, handles user interaction
-├── computorv1.py           # Core logic for parsing, reducing, and solving equations
-├── utils.py                # Utility functions for type checking, math operations, etc.
-├── LICENSE                 # MIT License
-├── en.subject_computerv1.pdf # Subject description
-└── README.md               # Project documentation
+├── run.py                 		# Main entry point, handles user interaction
+├── computorv1.py           	# Core logic for parsing, reducing, and solving equations
+├── utils.py                	# Utility functions for type checking, math operations, etc.
+├── LICENSE                 	# MIT License
+├── en.subject_computerv1.pdf	# Subject description
+└── README.md               	# Project documentation
 ```
 
 ## ⚙️ Requirements
